@@ -19,7 +19,7 @@
     "postcss": "^8.4.32",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
-    "framer-motion": "^10.16.16",
+    "framer-motion": "^12.14.0",
     "react-router-dom": "^6.20.1",
     "axios": "^1.6.2",
     "react-hook-form": "^7.48.2",
