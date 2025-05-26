@@ -108,6 +108,28 @@ Or connect your GitHub repository to Vercel for automatic deployments.
 📋 **Deployment Resources:**
 - [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md) - Detailed deployment guide
 - [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) - Step-by-step checklist
+- [CI_CD_SETUP_GUIDE.md](CI_CD_SETUP_GUIDE.md) - Complete CI/CD pipeline setup
+
+### 5. Set Up CI/CD Pipeline (Recommended)
+
+For automatic deployments on every code push:
+
+```bash
+# Run the setup script
+./setup-cicd.sh
+
+# Follow the prompts to configure:
+# - Vercel integration
+# - GitHub secrets
+# - Environment variables
+```
+
+This sets up:
+- ✅ **Automatic deployments** on push to main
+- ✅ **Preview deployments** for pull requests
+- ✅ **Quality checks** and testing
+- ✅ **Security scanning**
+- ✅ **Dependency management**
 
 ## 🔧 Configuration
 

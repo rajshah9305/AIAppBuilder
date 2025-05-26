@@ -1,0 +1,41 @@
+name: Auto-merge Dependabot PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  auto-merge:
+    name: Auto-merge Dependabot PRs
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies and run tests
+      run: |
+        npm ci
+        cd frontend && npm ci && npm test -- --watchAll=false
+        cd ../api && npm ci && npm test --if-present
+        
+    - name: Auto-approve Dependabot PRs
+      if: success()
+      uses: hmarr/auto-approve-action@v4
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Auto-merge Dependabot PRs
+      if: success()
+      uses: pascalgn/merge-action@v0.15.6
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        merge_method: squash
+        merge_commit_message: "Auto-merge: {pull_request_title} ({pull_request_number})"

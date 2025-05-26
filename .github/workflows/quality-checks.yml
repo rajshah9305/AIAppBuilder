@@ -1,0 +1,134 @@
+name: Quality Checks
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Code Quality and Security Checks
+  quality:
+    name: Code Quality & Security
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for better analysis
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd frontend && npm ci
+        cd ../api && npm ci
+        
+    - name: Run ESLint (Frontend)
+      run: cd frontend && npm run lint --if-present
+      continue-on-error: true
+      
+    - name: Run Prettier Check
+      run: |
+        npx prettier --check "frontend/src/**/*.{js,jsx,ts,tsx,json,css,md}"
+        npx prettier --check "api/**/*.{js,json,md}"
+      continue-on-error: true
+      
+    - name: TypeScript Check (Frontend)
+      run: cd frontend && npx tsc --noEmit
+      continue-on-error: true
+      
+    - name: Security Audit (Frontend)
+      run: cd frontend && npm audit --audit-level=moderate
+      continue-on-error: true
+      
+    - name: Security Audit (API)
+      run: cd api && npm audit --audit-level=moderate
+      continue-on-error: true
+      
+    - name: Check for secrets
+      uses: trufflesecurity/trufflehog@main
+      with:
+        path: ./
+        base: main
+        head: HEAD
+        extra_args: --debug --only-verified
+        
+    - name: Dependency Review
+      uses: actions/dependency-review-action@v4
+      if: github.event_name == 'pull_request'
+
+  # Performance and Bundle Analysis
+  performance:
+    name: Performance Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd frontend && npm ci
+        
+    - name: Build frontend
+      run: cd frontend && npm run build
+      
+    - name: Analyze bundle size
+      uses: preactjs/compressed-size-action@v2
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        pattern: "./frontend/build/static/js/*.js"
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-files
+        path: frontend/build/
+        retention-days: 7
+
+  # Documentation and README checks
+  documentation:
+    name: Documentation Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Check README links
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+        use-quiet-mode: 'yes'
+        use-verbose-mode: 'yes'
+        config-file: '.github/markdown-link-check-config.json'
+        
+    - name: Spell check
+      uses: streetsidesoftware/cspell-action@v6
+      with:
+        files: |
+          **/*.md
+          **/*.txt
+        config: .github/cspell.json
+        
+    - name: Check for TODO comments
+      run: |
+        echo "Checking for TODO comments..."
+        if grep -r "TODO\|FIXME\|HACK" --include="*.js" --include="*.ts" --include="*.tsx" --include="*.jsx" .; then
+          echo "⚠️ Found TODO/FIXME/HACK comments. Consider addressing them."
+        else
+          echo "✅ No TODO/FIXME/HACK comments found."
+        fi
