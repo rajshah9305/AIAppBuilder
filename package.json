@@ -1,0 +1,38 @@
+{
+  "name": "no-code-ai-app-builder",
+  "version": "1.0.0",
+  "description": "A no-code AI app builder with multiple AI framework integration",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm start",
+    "dev:backend": "cd api && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd api && npm start",
+    "install:all": "npm install && cd frontend && npm install && cd ../api && npm install",
+    "test": "cd frontend && npm test && cd ../api && npm test",
+    "vercel-build": "cd frontend && npm install && npm run build"
+  },
+  "keywords": [
+    "no-code",
+    "ai",
+    "app-builder",
+    "react",
+    "nodejs",
+    "openai",
+    "groq",
+    "crewai",
+    "metagpt",
+    "autogen",
+    "langchain"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
