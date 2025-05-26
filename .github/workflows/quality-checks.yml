@@ -117,7 +117,7 @@ jobs:
         config-file: '.github/markdown-link-check-config.json'
         
     - name: Spell check
-      uses: streetsidesoftware/cspell-action@v6
+      uses: streetsidesoftware/cspell-action@v7
       with:
         files: |
           **/*.md
