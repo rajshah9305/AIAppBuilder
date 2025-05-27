@@ -35,26 +35,80 @@ This guide will help you deploy the AI App Builder to Vercel for production use.
    - Click "New Project"
    - Import your GitHub repository
    - Vercel will automatically detect the configuration
-
 ## ⚙️ Environment Variables
 
-Set these environment variables in your Vercel dashboard:
+Set these environment variables in your Vercel project settings. Some variables from `api/.env.example` are listed here. Add others from that file as needed by your specific configuration.
 
-### Required Variables
+### Core Configuration (Required)
+
 ```env
+# AI Framework API Keys
 OPENAI_API_KEY=your-openai-api-key-here
-GROQ_API_KEY=your-groq-api-key-here
-JWT_SECRET=your-super-secret-jwt-key-change-this
-NODE_ENV=production
+GROQ_API_KEY=your-groq-api-key-here # If using Groq
+
+# Security
+JWT_SECRET=your-super-secret-jwt-key-must-be-changed-for-production
+SESSION_SECRET=your-session-secret-must-be-changed-for-production # Important for session management
+
+# Server Environment
+NODE_ENV=production # Essential for Vercel to use production optimizations
 ```
 
-### Optional Variables
+### Optional & Recommended for Production
+
 ```env
-FRONTEND_URL=https://your-app.vercel.app
-DATABASE_URL=your-database-connection-string
+# Server Configuration
+# PORT: Vercel sets this automatically. Your application should use process.env.PORT.
+FRONTEND_URL=https://your-app-name.vercel.app # Your deployed frontend URL
+
+# Database (if not using Vercel Postgres, provide the full URL)
+DATABASE_URL=your-database-connection-string 
+
+# Redis (if using external Redis for caching/sessions)
 REDIS_URL=your-redis-connection-string
+
+# Rate Limiting (Highly Recommended for public APIs)
+ENABLE_RATE_LIMITING=true
+RATE_LIMIT_WINDOW_MS=900000 # 15 minutes
+RATE_LIMIT_MAX_REQUESTS=100
+GENERATION_RATE_LIMIT_WINDOW_MS=3600000 # 1 hour
+GENERATION_RATE_LIMIT_MAX_REQUESTS=20 # Adjust based on expected usage and AI service limits
+
+# AI Framework Specific Settings (Customize as needed)
+OPENAI_MODEL=gpt-4
+OPENAI_MAX_TOKENS=4000
+GROQ_MODEL=llama3-8b-8192 # Or your preferred Groq model
+GROQ_MAX_TOKENS=3000
+
+# Logging
+LOG_LEVEL=info # Recommended for production (e.g., info, warn, error)
+# LOG_FILE: Vercel functions primarily use stdout/stderr for logging. File logging might not work as expected or require specific configurations.
+
+# Feature Flags (Adjust based on desired production features)
+ENABLE_REGISTRATION=true
+ENABLE_EMAIL_VERIFICATION=false # Set to true if SMTP is configured and feature is desired
 ```
 
+### Email Configuration (Optional - if email features are needed)
+*Note: Ensure your email provider's settings are correct and allowlist Vercel's IP ranges if necessary.*
+```env
+SMTP_HOST=your-smtp-host
+SMTP_PORT=587 # Or your SMTP port
+SMTP_USER=your-smtp-username
+SMTP_PASSWORD=your-smtp-password
+FROM_EMAIL=noreply@yourdomain.com
+```
+
+### File Uploads (Important Considerations for Vercel)
+*Vercel's serverless functions have an ephemeral (temporary) filesystem. For persistent file storage, use a dedicated cloud storage service (e.g., AWS S3, Google Cloud Storage, Cloudinary) and configure your application accordingly. The following variables are from `.env.example` but might need a different approach on Vercel:*
+```env
+# MAX_FILE_SIZE=10485760 # Max size in bytes
+# UPLOAD_DIR=uploads # Local directory, not suitable for Vercel's ephemeral filesystem for persistent storage
+```
+
+### Other Variables
+*Review `api/.env.example` for other variables that might be relevant to your specific setup, such as `BCRYPT_ROUNDS`, `WEBHOOK_SECRET`, `ANALYTICS_API_KEY`, `ENABLE_ANALYTICS`, `HEALTH_CHECK_INTERVAL`, `METRICS_ENABLED` and set them in Vercel if needed.*
+```
 ## 🗄️ Database Setup
 
 Since Vercel is serverless, you'll need an external database:
@@ -231,3 +285,4 @@ vercel logs
 ---
 
 Your AI App Builder is now ready for production deployment on Vercel! 🎉
+```
