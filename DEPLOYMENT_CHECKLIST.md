@@ -27,11 +27,9 @@
 - [ ] Project imported to Vercel
 
 ### Environment Variables (Vercel Dashboard)
-- [ ] `OPENAI_API_KEY` - Your OpenAI API key
-- [ ] `GROQ_API_KEY` - Your Groq API key (optional)
-- [ ] `JWT_SECRET` - Secure random string for JWT signing
-- [ ] `NODE_ENV` - Set to "production"
-- [ ] `FRONTEND_URL` - Your Vercel app URL (e.g., https://your-app.vercel.app)
+- [ ] All **Required** and relevant **Optional & Recommended for Production** environment variables are set in the Vercel dashboard as detailed in `VERCEL_DEPLOYMENT.MD`.
+- [ ] `NODE_ENV` is confirmed to be set to `production`.
+- [ ] Sensitive keys (API keys, JWT/Session secrets) are securely stored.
 
 ### Build Configuration
 - [ ] `vercel.json` configuration verified
