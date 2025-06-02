@@ -19,7 +19,7 @@
     "socket.io": "^4.7.4",
     "dotenv": "^16.3.1",
     "openai": "^4.20.1",
-    "groq-sdk": "^0.22.0",
+    "groq-sdk": "^0.23.0",
     "pg": "^8.11.3",
     "bcryptjs": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
