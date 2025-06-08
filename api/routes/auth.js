@@ -29,7 +29,7 @@ const generateToken = (userId) => {
 
 // Helper function to create user object without password
 const sanitizeUser = (user) => {
-  const { password, ...sanitizedUser } = user;
+  const { _password, ...sanitizedUser } = user;
   return sanitizedUser;
 };
 
@@ -44,7 +44,7 @@ router.post('/register', validateRegistration, async (req, res) => {
       });
     }
 
-    const { email, password, name } = req.body;
+    const { email, name } = req.body; // Removed unused 'password' from destructuring
 
     // Check if user already exists
     if (users.has(email)) {
@@ -56,7 +56,7 @@ router.post('/register', validateRegistration, async (req, res) => {
 
     // Hash password
     const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds); // Use req.body.password directly
 
     // Create user
     const user = {

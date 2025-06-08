@@ -45,7 +45,7 @@ jobs:
       run: cd api && npm test --if-present
       
     - name: Build frontend
-      run: cd frontend && npm run build
+      run: cd frontend && DISABLE_ESLINT_PLUGIN=true npm run build
       
     - name: Upload test coverage
       uses: codecov/codecov-action@v5

@@ -169,7 +169,7 @@ class AIFrameworkService {
     }
   }
   
-  async generateWithOpenAI(prompt, analysis) {
+  async generateWithOpenAI(prompt, _analysis) { // analysis prefixed with _
     if (!this.frameworks.openai.enabled) {
       throw new Error('OpenAI API key not configured');
     }
@@ -184,7 +184,7 @@ class AIFrameworkService {
           },
           {
             role: 'user',
-            content: `Based on this analysis:\n${analysis}\n\nGenerate complete code for: ${prompt}`
+            content: `Based on this analysis:\n${_analysis}\n\nGenerate complete code for: ${prompt}` // analysis prefixed with _
           }
         ],
         max_tokens: 4000,
@@ -198,7 +198,7 @@ class AIFrameworkService {
     }
   }
   
-  async generateWithGroq(prompt, analysis) {
+  async generateWithGroq(prompt, _analysis) {
     if (!this.frameworks.groq.enabled) {
       throw new Error('Groq API key not configured');
     }
@@ -212,7 +212,7 @@ class AIFrameworkService {
           },
           {
             role: 'user',
-            content: `Based on this analysis:\n${analysis}\n\nGenerate code for: ${prompt}`
+            content: `Based on this analysis:\n${_analysis}\n\nGenerate code for: ${prompt}`
           }
         ],
         model: this.frameworks.groq.model,
@@ -227,7 +227,7 @@ class AIFrameworkService {
     }
   }
   
-  async generateWithCrewAI(prompt, analysis) {
+  async generateWithCrewAI(prompt, _analysis) { // analysis prefixed with _
     // Mock CrewAI implementation
     await this.delay(2000); // Simulate processing time
     
@@ -268,7 +268,7 @@ class AIFrameworkService {
     };
   }
   
-  async generateWithMetaGPT(prompt, analysis) {
+  async generateWithMetaGPT(prompt, _analysis) {
     // Mock MetaGPT implementation
     await this.delay(1500);
     
@@ -296,7 +296,7 @@ class AIFrameworkService {
     };
   }
   
-  async generateWithAutoGen(prompt, analysis) {
+  async generateWithAutoGen(prompt, _analysis) { // analysis prefixed with _
     // Mock AutoGen implementation
     await this.delay(2500);
     
@@ -328,7 +328,7 @@ class AIFrameworkService {
     };
   }
   
-  async generateWithLangChain(prompt, analysis) {
+  async generateWithLangChain(prompt, _analysis) { // Renamed from AutoGen, analysis already _
     // Mock LangChain implementation
     await this.delay(3000);
     
