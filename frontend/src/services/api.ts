@@ -150,7 +150,7 @@ export const register = async (email: string, password: string, name: string): P
 export const logout = async (): Promise<void> => {
   try {
     await api.post('/auth/logout');
-  } catch (error) {
+  } catch (_error) { // error prefixed with _
     // Ignore logout errors
   } finally {
     localStorage.removeItem('authToken');

@@ -25,8 +25,8 @@ const CodePreview: React.FC<CodePreviewProps> = ({ result }) => {
       await navigator.clipboard.writeText(content);
       setCopiedSection(section);
       setTimeout(() => setCopiedSection(null), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
+    } catch (_err) { // err prefixed with _
+      // console.error('Failed to copy:', _err); // Commented out for linting
     }
   };
 

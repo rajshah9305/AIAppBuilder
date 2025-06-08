@@ -199,7 +199,7 @@ if (io) {
 }
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => { // next prefixed with _ as it's required by Express but not used
   console.error('Unhandled error:', err);
   res.status(500).json({
     error: 'Internal server error',

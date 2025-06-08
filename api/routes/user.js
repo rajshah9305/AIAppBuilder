@@ -19,7 +19,7 @@ router.get('/me', (req, res) => {
     }
 
     // Remove password from response
-    const { password, ...userProfile } = user;
+    const { _password, ...userProfile } = user;
     res.json(userProfile);
   } catch (error) {
     console.error('Get user profile error:', error);
@@ -80,7 +80,7 @@ router.patch('/me', [
     user.updatedAt = new Date().toISOString();
 
     // Remove password from response
-    const { password, ...userProfile } = user;
+    const { _password, ...userProfile } = user;
     res.json({
       message: 'Profile updated successfully',
       user: userProfile
